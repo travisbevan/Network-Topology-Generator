@@ -1,0 +1,62 @@
+{
+  "valid_ranges": [
+    {
+      "start": "10.0.0.0",
+      "end": "10.255.255.255",
+      "description": "Private Class A (RFC 1918)"
+    },
+    {
+      "start": "172.16.0.0",
+      "end": "172.31.255.255",
+      "description": "Private Class B (RFC 1918)"
+    },
+    {
+      "start": "192.168.0.0",
+      "end": "192.168.255.255",
+      "description": "Private Class C (RFC 1918)"
+    },
+    {
+      "start": "100.64.0.0",
+      "end": "100.127.255.255",
+      "description": "Carrier-Grade NAT (RFC 6598)"
+    },
+    {
+      "start": "192.0.2.0",
+      "end": "192.0.2.255",
+      "description": "Test Networks (RFC 5737)"
+    },
+    {
+      "start": "203.0.113.0",
+      "end": "203.0.113.255",
+      "description": "Test Networks (RFC 5737)"
+    }
+  ],
+  "invalid_ranges": [
+    {
+      "start": "127.0.0.0",
+      "end": "127.255.255.255",
+      "description": "Loopback (RFC 3330)"
+    },
+    {
+      "start": "169.254.0.0",
+      "end": "169.254.255.255",
+      "description": "Link Local (RFC 3927)"
+    },
+    {
+      "start": "224.0.0.0",
+      "end": "239.255.255.255",
+      "description": "Multicast (RFC 5771)"
+    },
+    {
+      "start": "240.0.0.0",
+      "end": "255.255.255.255",
+      "description": "Reserved (RFC 5735)"
+    }
+  ],
+  "obscured_ips": [
+    "37.58.1.1",
+    "45.67.89.100",
+    "203.123.45.67",
+    "198.54.3.19"
+  ]
+}
