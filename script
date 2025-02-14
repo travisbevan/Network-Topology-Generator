@@ -1,0 +1,147 @@
+<div class="network-topology-generator">
+    <h2>Network Topology Generator</h2>
+    <form id="networkTopologyForm">
+        <label for="numRouters">Number of Routers:</label>
+        <input type="number" id="numRouters" name="numRouters" value="1" min="1">
+        <div id="routerIPsContainer"></div>
+
+        <label for="numSwitches">Number of Switches:</label>
+        <input type="number" id="numSwitches" name="numSwitches" value="1" min="1">
+        <div id="switchIPsContainer"></div>
+
+        <label for="numVLANs">Number of VLANs:</label>
+        <input type="number" id="numVLANs" name="numVLANs" value="1" min="1">
+        <div id="vlanDetailsContainer"></div>
+
+        <button type="submit">Generate Network Topology</button>
+    </form>
+
+    <div id="outputContainer" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function generateIPFields(count, containerId, type) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        for (let i = 0; i < count; i++) {
+            const label = document.createElement('label');
+            label.textContent = `${type} ${i + 1} IP:`;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `${type.toLowerCase()}IP${i + 1}`;
+            input.placeholder = `e.g. 192.168.${i + 1}.1`;
+
+            container.appendChild(label);
+            container.appendChild(input);
+            container.appendChild(document.createElement('br'));
+        }
+    }
+
+    function updateVLANFields() {
+        const numVLANs = parseInt(document.getElementById("numVLANs").value);
+        const container = document.getElementById("vlanDetailsContainer");
+        container.innerHTML = '';
+
+        for (let i = 0; i < numVLANs; i++) {
+            const labelRange = document.createElement("label");
+            labelRange.textContent = `VLAN ${i + 1} Subnet (CIDR):`;
+            const inputRange = document.createElement("input");
+            inputRange.type = "text";
+            inputRange.name = `vlanSubnet${i + 1}`;
+            inputRange.placeholder = `e.g. 192.168.${i + 10}.0/24`;
+
+            const labelGateway = document.createElement("label");
+            labelGateway.textContent = `VLAN ${i + 1} Gateway:`;
+            const inputGateway = document.createElement("input");
+            inputGateway.type = "text";
+            inputGateway.name = `vlanGateway${i + 1}`;
+            inputGateway.placeholder = `e.g. 192.168.${i + 10}.1`;
+
+            const labelDHCP = document.createElement("label");
+            labelDHCP.textContent = `Enable DHCP for VLAN ${i + 1}?`;
+            const inputDHCP = document.createElement("input");
+            inputDHCP.type = "checkbox";
+            inputDHCP.name = `vlanDHCP${i + 1}`;
+
+            const labelDevices = document.createElement("label");
+            labelDevices.textContent = `Number of Devices in VLAN ${i + 1}:`;
+            const inputDevices = document.createElement("input");
+            inputDevices.type = "number";
+            inputDevices.name = `vlanDevices${i + 1}`;
+            inputDevices.value = "1";
+            inputDevices.min = "1";
+
+            container.appendChild(labelRange);
+            container.appendChild(inputRange);
+            container.appendChild(document.createElement("br"));
+
+            container.appendChild(labelGateway);
+            container.appendChild(inputGateway);
+            container.appendChild(document.createElement("br"));
+
+            container.appendChild(labelDHCP);
+            container.appendChild(inputDHCP);
+            container.appendChild(document.createElement("br"));
+
+            container.appendChild(labelDevices);
+            container.appendChild(inputDevices);
+            container.appendChild(document.createElement("br"));
+        }
+    }
+
+    document.getElementById("numRouters").addEventListener("input", function () {
+        generateIPFields(this.value, "routerIPsContainer", "Router");
+    });
+
+    document.getElementById("numSwitches").addEventListener("input", function () {
+        generateIPFields(this.value, "switchIPsContainer", "Switch");
+    });
+
+    document.getElementById("numVLANs").addEventListener("input", updateVLANFields);
+
+    // Auto-trigger for default values
+    generateIPFields(1, "routerIPsContainer", "Router");
+    generateIPFields(1, "switchIPsContainer", "Switch");
+    updateVLANFields();
+
+    document.getElementById("networkTopologyForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const routerIPs = [...document.querySelectorAll('#routerIPsContainer input')].map(input => input.value);
+        const switchIPs = [...document.querySelectorAll('#switchIPsContainer input')].map(input => input.value);
+        const vlanDetails = [...document.querySelectorAll('#vlanDetailsContainer input[name^="vlanSubnet"]')]
+            .map((input, index) => ({
+                subnet: input.value,
+                gateway: document.querySelector(`input[name="vlanGateway${index + 1}"]`).value,
+                dhcp: document.querySelector(`input[name="vlanDHCP${index + 1}"]`).checked,
+                numDevices: document.querySelector(`input[name="vlanDevices${index + 1}"]`).value,
+                devices: generateDeviceIPs(input.value, document.querySelector(`input[name="vlanDevices${index + 1}"]`).value)
+            }));
+
+        let output = `<h3>Network Topology:</h3>`;
+        output += `<p><strong>Routers:</strong> ${routerIPs.join(", ")}</p>`;
+        output += `<p><strong>Switches:</strong> ${switchIPs.join(", ")}</p>`;
+
+        vlanDetails.forEach((vlan, index) => {
+            output += `<p><strong>VLAN ${index + 1}:</strong><br>Subnet: ${vlan.subnet}<br>Gateway: ${vlan.gateway}<br>DHCP: ${vlan.dhcp ? "Enabled" : "Disabled"}<br>Devices:</p><ul>`;
+            vlan.devices.forEach(ip => {
+                output += `<li>${ip}</li>`;
+            });
+            output += `</ul>`;
+        });
+
+        document.getElementById("outputContainer").innerHTML = output;
+    });
+
+    function generateDeviceIPs(subnet, numDevices) {
+        let baseIP = subnet.split('.')[0] + '.' + subnet.split('.')[1] + '.' + subnet.split('.')[2] + '.';
+        let deviceIPs = [];
+        for (let i = 2; i < parseInt(numDevices) + 2; i++) {
+            deviceIPs.push(baseIP + i);
+        }
+        return deviceIPs;
+    }
+});
+</script>
