@@ -1,3 +1,8 @@
+<!-- Existing form setup -->
+<button id="auto_fill_config" style="flex: 1; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Auto Fill Configurations</button>
+
+<script>
+// Auto-fill function from GitHub
 function autoFillConfiguration() {
   const routerCount = document.getElementById('routers').value;
   const switchCount = document.getElementById('switches').value;
@@ -63,3 +68,4 @@ function autoFillConfiguration() {
 
 // Attach the auto fill functionality to the button
 document.getElementById('auto_fill_config').addEventListener('click', autoFillConfiguration);
+</script>
