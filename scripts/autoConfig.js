@@ -46,9 +46,15 @@ function autoFillConfiguration() {
         const vlanSubnet = document.getElementById('vlan' + i + '_subnet').value;
         const baseIp = vlanSubnet.split('.')[0] + '.' + vlanSubnet.split('.')[1];
         
+        // Create the input fields for device IPs in each VLAN if required
         for (let j = 1; j <= devicesInVlan; j++) {
           const deviceIp = baseIp + '.' + (parseInt(vlanSubnet.split('.').pop()) + j);
-          // You would need to create input fields for device IPs in each VLAN if required
+          const deviceInput = document.createElement('input');
+          deviceInput.type = 'text';
+          deviceInput.value = deviceIp;
+          deviceInput.placeholder = `Device ${j} IP in VLAN ${i}`;
+          deviceInput.style.width = '100%';
+          document.getElementById('devices-vlan-container').appendChild(deviceInput);
         }
       }
     }
