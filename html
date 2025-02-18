@@ -1,0 +1,44 @@
+<div class="container">
+  <!-- Router Configuration -->
+  <div class="section" id="router-section">
+    <h3>Router Configuration</h3>
+    <label for="routers">Number of Routers:</label>
+    <input type="number" id="routers" name="routers" min="1" max="10" value="1">
+    <div id="router-ip-container"></div>
+  </div>
+
+  <!-- Switch Configuration -->
+  <div class="section" id="switch-section">
+    <h3>Switch Configuration</h3>
+    <label for="switches">Number of Switches:</label>
+    <input type="number" id="switches" name="switches" min="1" max="10" value="1">
+    <div id="switch-ip-container"></div>
+  </div>
+
+  <!-- VLAN Configuration -->
+  <div class="section" id="vlan-section">
+    <h3>VLAN Configuration</h3>
+    <label for="vlans">Number of VLANs:</label>
+    <input type="number" id="vlans" name="vlans" min="1" max="10" value="1">
+    <div id="vlan-ip-container"></div>
+  </div>
+
+  <!-- Buttons for Actions -->
+  <div class="section">
+    <button id="auto_fill_config">Auto Fill Configurations</button>
+    <button id="reset_configuration">Reset Configuration</button>
+    <button id="generate_topology">Generate Network Topology</button>
+  </div>
+
+  <!-- Output Section -->
+  <div class="section" id="network-output" style="display:none;">
+    <h3>Generated Network Configuration</h3>
+    <div id="network-config"></div>
+  </div>
+</div>
+
+<!-- Load Scripts -->
+<script src="https://yourgithubrepo.com/js/config-handlers.js"></script>
+<script src="https://yourgithubrepo.com/js/auto-fill.js"></script>
+<script src="https://yourgithubrepo.com/js/generate-topology.js"></script>
+<script src="https://yourgithubrepo.com/js/reset.js"></script>
